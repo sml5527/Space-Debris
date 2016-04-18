@@ -15,11 +15,14 @@ void AppClass::InitVariables(void)
 	m_selection = std::pair<int, int>(-1, -1);
 	//Set the camera position
 	m_pCameraMngr->SetPositionTargetAndView(
-		vector3(0.0f, 2.5f, 15.0f),//Camera position
-		vector3(0.0f, 2.5f, 0.0f),//What Im looking at
+		vector3(0.0f, 0.0f, 15.0f),//Camera position
+		vector3(0.0f, 0.0f, 0.0f),//What Im looking at
 		REAXISY);//What is up
 	//Load a model onto the Mesh manager
-	m_pMeshMngr->LoadModel("Lego\\Unikitty.bto", "Unikitty");
+	m_pMeshMngr->LoadModel("Zelda\\MasterSword.bto", "Ship");
+
+	//rotate model to face away from the player
+	shipMatrix *= glm::rotate(shipMatrix, 90.0f, vector3(1.0f, 0.0f, 0.0f));
 }
 
 void AppClass::Update(void)
@@ -34,15 +37,6 @@ void AppClass::Update(void)
 	if (m_bFPC == true)
 		CameraRotation();
 
-	//Call the arcball method
-	ArcBall();
-	
-	//Set the model matrix for the first model to be the arcball
-	m_pMeshMngr->SetModelMatrix(ToMatrix4(m_qArcBall), 0);
-	
-	//Adds all loaded instance to the render list
-	m_pMeshMngr->AddInstanceToRenderList("ALL");
-
 	//Indicate the FPS
 	int nFPS = m_pSystem->GetFPS();
 	//print info into the console
@@ -55,6 +49,23 @@ void AppClass::Update(void)
 	
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
+
+	//draw a wire sphere at the mouse location
+	POINT mousePos;
+	GetCursorPos(&mousePos);
+	float windowWidth = static_cast<float>(m_pSystem->GetWindowWidth());
+	float windowHeight = static_cast<float>(m_pSystem->GetWindowHeight());
+
+	float mouseX = MapValue(static_cast<float>(mousePos.x), 0.0f, windowWidth, -windowWidth / 2, windowWidth / 2) / 100;
+	float mouseY = MapValue(static_cast<float>(mousePos.y), 0.0f, windowHeight, windowHeight / 2, -windowHeight / 2) / 100;
+	matrix4 mouseMat = glm::translate(vector3(mouseX, mouseY, 0.0f));
+	m_pMeshMngr->AddSphereToQueue(mouseMat, RERED, WIRE);
+
+	//set the model matrix for the ship
+	m_pMeshMngr->SetModelMatrix(shipMatrix, "Ship");
+
+	//Adds all loaded instance to the render list
+	m_pMeshMngr->AddInstanceToRenderList("ALL");
 }
 
 void AppClass::Display(void)

@@ -21,26 +21,19 @@ void AppClass::ProcessKeyboard(void)
 		bModifier = true;
 #pragma endregion
 
-#pragma region Camera Positioning
-	if(bModifier)
-		fSpeed *= 10.0f;
-	if(sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-		m_pCameraMngr->MoveForward(fSpeed);
+#pragma region Ship Movement
+	fSpeed *= 10.0f;
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+		shipMatrix *= glm::translate(vector3(0.0f, 0.0f, -fSpeed));
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-		m_pCameraMngr->MoveForward(-fSpeed);
+		shipMatrix *= glm::translate(vector3(0.0f, 0.0f, fSpeed));
 	
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::A))
-		m_pCameraMngr->MoveSideways(-fSpeed);
+		shipMatrix *= glm::translate(vector3(-fSpeed, 0.0f, 0.0f));
 
 	if(sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-		m_pCameraMngr->MoveSideways(fSpeed);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Q))
-		m_pCameraMngr->MoveVertical(-fSpeed);
-
-	if (sf::Keyboard::isKeyPressed(sf::Keyboard::E))
-		m_pCameraMngr->MoveVertical(fSpeed);
+		shipMatrix *= glm::translate(vector3(fSpeed, 0.0f, 0.0f));
 #pragma endregion
 
 #pragma region Other Actions

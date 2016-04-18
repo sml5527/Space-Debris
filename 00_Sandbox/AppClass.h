@@ -12,6 +12,8 @@ using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
 class AppClass : public ReEngAppClass
 {
+	matrix4 shipMatrix = IDENTITY_M4; //matrix for transformations on ship
+
 public:
 	typedef ReEngAppClass super;
 
