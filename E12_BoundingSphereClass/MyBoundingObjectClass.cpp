@@ -167,6 +167,7 @@ void MyBoundingObjectClass::setVisibility(bool value)
 	visibility = value;
 }
 
+
 void MyBoundingObjectClass::setColor(vector3 value)
 {
 	color = value;

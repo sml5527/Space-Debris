@@ -19,11 +19,12 @@ class MyBoundingObjectClass
 	vector3 m_v3Center = vector3(0.0f); //Will store the center point of the Object Class
 	vector3 m_v3Min = vector3(0.0f); //Will store the minimum vector of the Object Class
 	vector3 m_v3Max = vector3(0.0f); //Will store the maximum vector of the Object Class
-	bool visibility = true;
+	
 	vector3 color = vector3(0.0f, 1.0f, 0.0f);
 	MeshManagerSingleton* m_pMeshMngr = MeshManagerSingleton::GetInstance();
 
 public:
+	bool visibility = true;
 	/*
 	MyBoundingObjectClass
 	USAGE: Constructor

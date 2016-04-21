@@ -10,6 +10,7 @@ Date: 2015/09
 #include "MyBoundingSphereClass.h"
 #include "MyBoundingCubeClass.h"
 #include "MyBoundingObjectClass.h"
+#include "BOManager.h"
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
@@ -20,6 +21,7 @@ class AppClass : public ReEngAppClass
 
 	vector3 m_v3O1 = vector3(-2.5f, 0.0f, 0.0f);
 	vector3 m_v3O2 = vector3( 2.5f, 0.0f, 0.0f);
+	BOManager* objectMngr= BOManager::getInstance();
 
 public:
 	typedef ReEngAppClass super;

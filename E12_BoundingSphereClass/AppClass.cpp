@@ -21,6 +21,8 @@ void AppClass::InitVariables(void)
 
 	m_pBox1 = new MyBoundingObjectClass(m_pMeshMngr->GetVertexList("Steve"));
 	m_pBox2 = new MyBoundingObjectClass(m_pMeshMngr->GetVertexList("Creeper"));
+	objectMngr->addObject(m_pMeshMngr->GetVertexList("Steve"));
+	objectMngr->addObject(m_pMeshMngr->GetVertexList("Steve"));
 }
 
 void AppClass::Update(void)
@@ -41,13 +43,16 @@ void AppClass::Update(void)
 	m_pMeshMngr->SetModelMatrix(glm::translate(m_v3O1) * ToMatrix4(m_qArcBall), "Steve");
 	m_pMeshMngr->SetModelMatrix(glm::translate(m_v3O2), "Creeper");
 
-	m_pBox1->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Steve"));
-	m_pBox2->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Creeper"));
 
-	bool isColliding = m_pBox1->IsColliding(m_pBox2);
+	objectMngr->setObjectModelMatrix(0, m_pMeshMngr->GetModelMatrix("Steve"));
+	objectMngr->setObjectModelMatrix(1, m_pMeshMngr->GetModelMatrix("Creeper"));
 
-	m_pBox1->draw();
-	m_pBox2->draw();
+	//m_pBox1->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Steve"));
+	//m_pBox2->SetModelMatrix(m_pMeshMngr->GetModelMatrix("Creeper"));
+	
+	objectMngr->checkCollisons();
+
+	objectMngr->renderAll();
 	//if (isColliding)
 	//{
 	//	m_pMeshMngr->AddCubeToQueue(

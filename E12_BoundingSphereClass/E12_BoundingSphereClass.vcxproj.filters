@@ -30,6 +30,9 @@
     <ClInclude Include="MyBoundingObjectClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="BOManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="..\res\BTO.rc">
@@ -53,6 +56,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MyBoundingObjectClass.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="BOManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
