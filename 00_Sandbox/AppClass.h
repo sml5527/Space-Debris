@@ -7,6 +7,8 @@ Date: 2015/09 (Last Modified on: 15/11)
 
 #include "RE\ReEngAppClass.h"
 #include <SFML\Graphics.hpp>
+#include "MyBoundingObjectClass.h"
+#include "BOManager.h"
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
@@ -14,6 +16,7 @@ class AppClass : public ReEngAppClass
 {
 	matrix4 shipMatrix = IDENTITY_M4; //matrix for transformations on ship
 
+	BOManager* objectMngr = BOManager::getInstance();
 public:
 	typedef ReEngAppClass super;
 
