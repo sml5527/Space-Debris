@@ -9,12 +9,14 @@ Date: 2015/09 (Last Modified on: 15/11)
 #include <SFML\Graphics.hpp>
 #include "MyBoundingObjectClass.h"
 #include "BOManager.h"
+#include "Projectile.h"
 
 using namespace ReEng; //Using ReEng namespace to use all the classes in the dll
 
 class AppClass : public ReEngAppClass
 {
 	matrix4 shipMatrix = IDENTITY_M4; //matrix for transformations on ship
+	std::vector<Projectile> projectiles; //contains currently active projectiles
 
 	BOManager* objectMngr = BOManager::getInstance();
 public:

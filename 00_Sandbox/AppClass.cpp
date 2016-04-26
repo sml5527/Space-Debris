@@ -7,6 +7,9 @@ void AppClass::InitWindow(String a_sWindowName)
 	//if this line is in Init Application it will depend on the .cfg file, if it
 	//is on the InitVariables it will always force it regardless of the .cfg
 	m_v4ClearColor = vector4(0.4f, 0.6f, 0.9f, 0.0f);
+
+	//hide cursor
+	ShowCursor(FALSE);
 }
 
 void AppClass::InitVariables(void)
@@ -56,15 +59,25 @@ void AppClass::Update(void)
 	float windowWidth = static_cast<float>(m_pSystem->GetWindowWidth());
 	float windowHeight = static_cast<float>(m_pSystem->GetWindowHeight());
 
-	float mouseX = MapValue(static_cast<float>(mousePos.x), 0.0f, windowWidth, -windowWidth / 2, windowWidth / 2) / 100;
-	float mouseY = MapValue(static_cast<float>(mousePos.y), 0.0f, windowHeight, windowHeight / 2, -windowHeight / 2) / 100;
-	matrix4 mouseMat = glm::translate(vector3(mouseX, mouseY, 0.0f));
+	float mouseX = MapValue(static_cast<float>(mousePos.x), 0.0f, 1920.0f, -20.0f, 20.0f);
+	float mouseY = MapValue(static_cast<float>(mousePos.y), 0.0f, 1080.0f, 10.0f, -10.0f);
+	matrix4 mouseMat = glm::translate(vector3(mouseX, mouseY, -10.0f));
 	m_pMeshMngr->AddSphereToQueue(mouseMat, RERED, WIRE);
 
 	//set the model matrix for the ship
 	m_pMeshMngr->SetModelMatrix(shipMatrix, "Ship");
 
-	//Adds all loaded instance to the render list
+	//move and draw projectiles
+	if (projectiles.size() > 0)
+	{
+		for (int x = 0; x < projectiles.size(); x++)
+		{
+			projectiles[x].moveProjectile(m_pSystem->LapClock());
+			m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
+		}
+	}
+		
+		//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
 }
 

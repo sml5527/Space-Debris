@@ -63,28 +63,24 @@ void AppClass::ProcessMouse(void)
 	ON_MOUSE_PRESS_RELEASE(Left, NULL, bLeft = true)
 	if (bLeft)
 	{
-		//Turn off the visibility of all BOs for all instances
-		m_pMeshMngr->SetVisibleBO(BD_NONE, "ALL", -1);
-		//Get the Position and direction of the click on the screen
-		std::pair<vector3, vector3> pair =
-			m_pCameraMngr->GetClickAndDirectionOnWorldSpace(sf::Mouse::getPosition().x, sf::Mouse::getPosition().y);
-		float fDistance = 0;//Stores the distance to the first colliding object
-		m_selection = m_pMeshMngr->IsColliding(pair.first, pair.second, fDistance);
+		//find crosshair position
+		POINT mousePos;
+		GetCursorPos(&mousePos);
+		float windowWidth = static_cast<float>(m_pSystem->GetWindowWidth());
+		float windowHeight = static_cast<float>(m_pSystem->GetWindowHeight());
 
-		//If there is a collision
-		if (m_selection.first >= 0)
-		{
-			//Turn on the BO of the group
-			m_pMeshMngr->SetVisibleBO(BD_OB, m_selection.first, m_selection.second);
+		float mouseX = MapValue(static_cast<float>(mousePos.x), 0.0f, 1920.0f, -20.0f, 20.0f);
+		float mouseY = MapValue(static_cast<float>(mousePos.y), 0.0f, 1080.0f, 10.0f, -10.0f);
 
-			//Turn of the BO of the instance but not the group
-			m_pMeshMngr->SetVisibleBO(BD_NONE, m_selection.first, -2);
-		}
+		//create projectile
+		vector3 shipPos = vector3(shipMatrix[3][0], shipMatrix[3][1], shipMatrix[3][2]);
+		vector3 targetPos = vector3(mouseX, mouseY, -10.0f);
+		projectiles.push_back(Projectile(shipPos, targetPos, 2.0f));
 	}
 	
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))
 		m_bArcBall = true;
 	
-	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
-		m_bFPC = true;
+	//if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Right))
+	//	m_bFPC = true;
 }

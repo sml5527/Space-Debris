@@ -1,7 +1,3 @@
-/*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
-Date: 2015/10
-----------------------------------------------*/
 #ifndef __MYBOUNDINGOBJECTCLASS_H_
 #define __MYBOUNDINGOBJECTCLASS_H_
 
