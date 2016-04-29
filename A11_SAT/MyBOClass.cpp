@@ -1,4 +1,5 @@
 #include "MyBOClass.h"
+#include "MyBOManager.h"
 //  MyBOClass
 void MyBOClass::Init(void)
 {
@@ -183,17 +184,17 @@ vector3 MyBOClass::GetMaxG(void) { return m_v3MaxG; }
 //--- Non Standard Singleton Methods
 void MyBOClass::DisplaySphere(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddSphereToRenderList(glm::translate(m_m4ToWorld, m_v3Center) *
+	m_pMeshMngr->AddSphereToQueue(glm::translate(m_m4ToWorld, m_v3Center) *
 		glm::scale(vector3(m_fRadius * 2.0f)), a_v3Color, WIRE);
 }
 void MyBOClass::DisplayOriented(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddCubeToRenderList(glm::translate(m_m4ToWorld, m_v3Center) *
+	m_pMeshMngr->AddCubeToQueue(glm::translate(m_m4ToWorld, m_v3Center) *
 		glm::scale(m_v3HalfWidth * 2.0f), a_v3Color, WIRE);
 }
 void MyBOClass::DisplayReAlligned(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddCubeToRenderList(glm::translate(IDENTITY_M4, m_v3CenterG) *
+	m_pMeshMngr->AddCubeToQueue(glm::translate(IDENTITY_M4, m_v3CenterG) *
 		glm::scale(m_v3HalfWidthG * 2.0f), a_v3Color, WIRE);
 }
 bool MyBOClass::IsColliding(MyBOClass* const a_pOther)
@@ -217,6 +218,7 @@ bool MyBOClass::IsColliding(MyBOClass* const a_pOther)
 
 	bool bColliding = true;
 
+	
 	//Check for X
 	if (m_v3MaxG.x < a_pOther->m_v3MinG.x)
 		bColliding = false;
@@ -235,5 +237,104 @@ bool MyBOClass::IsColliding(MyBOClass* const a_pOther)
 	if (m_v3MinG.z > a_pOther->m_v3MaxG.z)
 		bColliding = false;
 
-	return bColliding;
+	if (bColliding == true)
+	{
+
+		//starting OBB test
+		float aTempRadius, bTempRadius;
+		matrix3 rotate, absRotate;
+		//compute rotation matrix expressing b in a's coord frame
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				rotate[i][j] = glm::dot(GetHalfWidth()[i], a_pOther->GetHalfWidth()[j]);
+
+			}
+
+		}
+
+		//get translation vector t (called distanceV in this case)
+		vector3 distanceV = a_pOther->GetCenterGlobal() - GetCenterGlobal();
+		distanceV = vector3(glm::dot(distanceV[0], GetHalfWidth()[0]), glm::dot(distanceV[2], GetHalfWidth()[2]), glm::dot(distanceV[2], GetHalfWidth()[2])); // had to add array notation to distanceV here.
+
+		//compute common subexpressions
+		for (int i = 0; i < 3; i++)
+		{
+			for (int j = 0; j < 3; j++)
+			{
+				absRotate[i][j] = glm::abs(rotate[i][j]) + .00001;
+
+			}
+
+		}
+
+
+		// Test axes L = A0, L = A1, L = A2 
+		for (int i = 0; i < 3; i++) {
+			aTempRadius = GetHalfWidthG()[i];
+			bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[i][0] + a_pOther->GetHalfWidthG()[1] * absRotate[i][1] + a_pOther->GetHalfWidthG()[2] * absRotate[i][2];
+			if (abs(distanceV[i]) > aTempRadius + bTempRadius) return false;
+		}
+
+		// Test axes L = B0, L = B1, L = B2 
+		for (int i = 0; i < 3; i++) {
+			aTempRadius = GetHalfWidthG()[0] * absRotate[0][i] + GetHalfWidthG()[1] * absRotate[1][i] + GetHalfWidthG()[2] * absRotate[2][i];
+			bTempRadius = a_pOther->GetHalfWidthG()[i];
+			if (abs(distanceV[0] * rotate[0][i] + distanceV[1] * rotate[1][i] + distanceV[2] * rotate[2][i]) > aTempRadius + bTempRadius) return false;
+		}
+
+		// Test axis L = A0 x B0 
+		aTempRadius = GetHalfWidthG()[1] * absRotate[2][0] + GetHalfWidthG()[2] * absRotate[1][0];
+		bTempRadius = a_pOther->GetHalfWidthG()[1] * absRotate[0][2] + a_pOther->GetHalfWidthG()[2] * absRotate[0][1];
+		if (abs(distanceV[2] * rotate[1][0] - distanceV[1] * rotate[2][0]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A0 x B1 
+		aTempRadius = GetHalfWidthG()[1] * absRotate[2][1] + GetHalfWidthG()[2] * absRotate[1][1];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[0][2] + a_pOther->GetHalfWidthG()[2] * absRotate[0][0];
+		if (abs(distanceV[2] * rotate[1][1] - distanceV[1] * rotate[2][1]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A0 x B2 
+		aTempRadius = GetHalfWidthG()[1] * absRotate[2][2] + GetHalfWidthG()[2] * absRotate[1][2];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[0][1] + a_pOther->GetHalfWidthG()[1] * absRotate[0][0];
+		if (abs(distanceV[2] * rotate[1][2] - distanceV[1] * rotate[2][2]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A1 x B0 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[2][0] + GetHalfWidthG()[2] * absRotate[0][0];
+		bTempRadius = a_pOther->GetHalfWidthG()[1] * absRotate[1][2] + a_pOther->GetHalfWidthG()[2] * absRotate[1][1];
+		if (abs(distanceV[0] * rotate[2][0] - distanceV[2] * rotate[0][0]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A1 x B1 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[2][1] + GetHalfWidthG()[2] * absRotate[0][1];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[1][2] + a_pOther->GetHalfWidthG()[2] * absRotate[1][0];
+		if (abs(distanceV[0] * rotate[2][1] - distanceV[2] * rotate[0][1]) > aTempRadius + bTempRadius) return false;
+
+
+		// Test axis L = A1 x B2 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[2][2] + GetHalfWidthG()[2] * absRotate[0][2];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[1][1] + a_pOther->GetHalfWidthG()[1] * absRotate[1][0];
+		if (glm::abs(distanceV[0] * rotate[2][2] - distanceV[2] * rotate[0][2]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A2 x B0 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[1][0] + GetHalfWidthG()[1] * absRotate[0][0];
+		bTempRadius = a_pOther->GetHalfWidthG()[1] * absRotate[2][2] + a_pOther->GetHalfWidthG()[2] * absRotate[2][1];
+		if (glm::abs(distanceV[1] * rotate[0][0] - distanceV[0] * rotate[1][0]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A2 x B1 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[1][1] + GetHalfWidthG()[1] * absRotate[0][1];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[2][2] + a_pOther->GetHalfWidthG()[2] * absRotate[2][0];
+		if (glm::abs(distanceV[1] * rotate[0][1] - distanceV[0] * rotate[1][1]) > aTempRadius + bTempRadius) return false;
+
+		// Test axis L = A2 x B2 
+		aTempRadius = GetHalfWidthG()[0] * absRotate[1][2] + GetHalfWidthG()[1] * absRotate[0][2];
+		bTempRadius = a_pOther->GetHalfWidthG()[0] * absRotate[2][1] + a_pOther->GetHalfWidthG()[1] * absRotate[2][0];
+		if (glm::abs(distanceV[1] * rotate[0][2] - distanceV[0] * rotate[1][2]) > aTempRadius + bTempRadius) return false;
+
+
+		//if no separating axis is found, they must be colliding
+		std::cout << "hit";
+		return true;
+	}
+	else
+		return false;
 }
