@@ -1,6 +1,11 @@
 /*----------------------------------------------
-Programmer: Alberto Bobadilla (labigm@gmail.com)
-Date: 2015/08
+Programmers:
+Alex Harper
+Jason Morris
+Mario Chuman
+Stephen Lewis
+
+Date: 2016/05
 ----------------------------------------------*/
 
 #include "AppClass.h"

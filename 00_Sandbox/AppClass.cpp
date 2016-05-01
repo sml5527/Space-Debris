@@ -2,12 +2,12 @@
 
 void AppClass::InitWindow(String a_sWindowName)
 {
-	super::InitWindow("Sandbox"); // Window Name
+	super::InitWindow("Space Debris"); // Window Name
 
 	// Set the clear color based on Microsoft's CornflowerBlue (default in XNA)
 	//if this line is in Init Application it will depend on the .cfg file, if it
 	//is on the InitVariables it will always force it regardless of the .cfg
-	m_v4ClearColor = vector4(0.4f, 0.6f, 0.9f, 0.0f);
+	m_v4ClearColor = vector4(0.0f, 0.0f, 0.0f, 0.0f);
 
 	//hide cursor
 	ShowCursor(FALSE);
@@ -22,6 +22,7 @@ void AppClass::InitVariables(void)
 		vector3(0.0f, 0.0f, 15.0f),//Camera position
 		vector3(0.0f, 0.0f, 0.0f),//What Im looking at
 		REAXISY);//What is up
+
 	//Load a model onto the Mesh manager
 	m_pMeshMngr->LoadModel("Zelda\\MasterSword.bto", "Ship");
 
@@ -30,6 +31,7 @@ void AppClass::InitVariables(void)
 
 	//rotate model to face away from the player
 	shipMatrix *= glm::rotate(shipMatrix, 90.0f, vector3(1.0f, 0.0f, 0.0f));
+	shipMatrix *= glm::scale(vector3(2.0f,2.0f,2.0f));
 }
 
 void AppClass::Update(void)
@@ -57,10 +59,11 @@ void AppClass::Update(void)
 	//print info into the console
 	//printf("FPS: %d            \r", nFPS);//print the Frames per Second
 	//Print info on the screen
-	m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
+	//m_pMeshMngr->PrintLine(m_pSystem->GetAppName(), REYELLOW);
+	m_pMeshMngr->PrintLine("Space Debris", REWHITE);
 
-	m_pMeshMngr->Print("Selection: ");
-	m_pMeshMngr->PrintLine(m_pMeshMngr->GetInstanceGroupName(m_selection.first, m_selection.second), REYELLOW);
+	/*m_pMeshMngr->Print("Selection: ");
+	m_pMeshMngr->PrintLine(m_pMeshMngr->GetInstanceGroupName(m_selection.first, m_selection.second), REYELLOW);*/
 	
 	m_pMeshMngr->Print("FPS:");
 	m_pMeshMngr->Print(std::to_string(nFPS), RERED);
