@@ -1,4 +1,5 @@
 #include "AppClass.h"
+
 void AppClass::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("Sandbox"); // Window Name
@@ -24,12 +25,23 @@ void AppClass::InitVariables(void)
 	//Load a model onto the Mesh manager
 	m_pMeshMngr->LoadModel("Zelda\\MasterSword.bto", "Ship");
 
+	
+	
+
 	//rotate model to face away from the player
 	shipMatrix *= glm::rotate(shipMatrix, 90.0f, vector3(1.0f, 0.0f, 0.0f));
 }
 
 void AppClass::Update(void)
 {
+
+	//generate walls
+	matrix4 topMat = IDENTITY_M4;
+	topMat = glm::translate(vector3(0.0f, 5.0f, -1.0f));
+	m_pMeshMngr->AddPlaneToQueue(topMat, REWHITE);
+	
+	
+	
 	//Update the system's time
 	m_pSystem->UpdateTime();
 
@@ -67,13 +79,21 @@ void AppClass::Update(void)
 	//set the model matrix for the ship
 	m_pMeshMngr->SetModelMatrix(shipMatrix, "Ship");
 
+	double timeDiff = m_pSystem->LapClock();
 	//move and draw projectiles
 	if (projectiles.size() > 0)
 	{
 		for (int x = 0; x < projectiles.size(); x++)
 		{
-			projectiles[x].moveProjectile(m_pSystem->LapClock());
-			m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
+			projectiles[x].moveProjectile(timeDiff);
+			if (projectiles[x].isTargetReached() == false)
+			{
+				m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
+			}
+			else
+			{
+				projectiles.erase(projectiles.begin() + x);
+			}
 		}
 	}
 		
