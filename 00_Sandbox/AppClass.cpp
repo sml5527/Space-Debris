@@ -28,6 +28,7 @@ void AppClass::InitVariables(void)
 	//rotate model to face away from the player
 	shipMatrix *= glm::rotate(shipMatrix, 90.0f, vector3(1.0f, 0.0f, 0.0f));
 	shipMatrix *= glm::scale(vector3(2.0f,2.0f,2.0f));
+	generateAsteroids();
 }
 
 void AppClass::Update(void)
@@ -79,6 +80,15 @@ void AppClass::Update(void)
 			m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
 		}
 	}
+
+	if (asteroids.size() > 0)
+	{
+		for (int x = 0; x < asteroids.size(); x++)
+		{
+			asteroids[x].moveAsteroid(m_pSystem->LapClock());
+			m_pMeshMngr->AddSphereToQueue(asteroids[x].getMatrix(), REGREEN, WIRE);
+		}
+	}
 		
 		//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
@@ -114,4 +124,15 @@ void AppClass::Display(void)
 void AppClass::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
+}
+
+void AppClass::generateAsteroids(void)
+{
+	for (int i = 0; i < 10; i++)
+	{
+
+		vector3 pos(rand() % 8-4, rand() % 8-4, -20);
+		vector3 targetPos(rand() % 8-4, rand() % 8-4, 10);
+		asteroids.push_back(Asteroid(pos, targetPos, rand() % 10));
+	}
 }
