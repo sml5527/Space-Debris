@@ -181,16 +181,16 @@ void AppClass::AddStars(void)
 	matrix4 star9 = IDENTITY_M4;
 	matrix4 star10 = IDENTITY_M4;
 
-	star1 = glm::translate(vector3(0.0f, 0.0f, -5.0f));
-	star2 = glm::translate(vector3(0.0f, 0.0f, -5.0f));
-	star3 = glm::translate(vector3(5.0f, 2.0f, -5.0f));
-	star4 = glm::translate(vector3(5.0f, 2.0f, -5.0f));
-	star5 = glm::translate(vector3(8.0f, -4.0f, -5.0f));
-	star6 = glm::translate(vector3(8.0f, -4.0f, -5.0f));
-	star7 = glm::translate(vector3(-3.0f, 7.0f, -5.0f));
-	star8 = glm::translate(vector3(-3.0f, 7.0f, -5.0f));
-	star9 = glm::translate(vector3(-3.0f, -5.0f, -5.0f));
-	star10 = glm::translate(vector3(-3.0f, -5.0f, -5.0f));
+	star1 = glm::translate(vector3(0.0f, 0.0f, -15.0f));
+	star2 = glm::translate(vector3(0.0f, 0.0f, -15.0f));
+	star3 = glm::translate(vector3(5.0f, 2.0f, -15.0f));
+	star4 = glm::translate(vector3(5.0f, 2.0f, -15.0f));
+	star5 = glm::translate(vector3(8.0f, -4.0f, -15.0f));
+	star6 = glm::translate(vector3(8.0f, -4.0f, -15.0f));
+	star7 = glm::translate(vector3(-3.0f, 7.0f, -15.0f));
+	star8 = glm::translate(vector3(-3.0f, 7.0f, -15.0f));
+	star9 = glm::translate(vector3(-3.0f, -5.0f, -15.0f));
+	star10 = glm::translate(vector3(-3.0f, -5.0f, -15.0f));
 
 	star1 = glm::rotate(star1, 45.0f, REAXISZ);
 	star2 = glm::rotate(star1, 45.0f, REAXISZ);
