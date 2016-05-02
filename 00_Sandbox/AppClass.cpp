@@ -1,4 +1,5 @@
 #include "AppClass.h"
+
 void AppClass::InitWindow(String a_sWindowName)
 {
 	super::InitWindow("Space Debris"); // Window Name
@@ -7,7 +8,6 @@ void AppClass::InitWindow(String a_sWindowName)
 	//if this line is in Init Application it will depend on the .cfg file, if it
 	//is on the InitVariables it will always force it regardless of the .cfg
 	m_v4ClearColor = vector4(0.0f, 0.0f, 0.0f, 0.0f);
-
 	//hide cursor
 	ShowCursor(FALSE);
 }
@@ -25,6 +25,9 @@ void AppClass::InitVariables(void)
 	//Load a model onto the Mesh manager
 	m_pMeshMngr->LoadModel("Zelda\\MasterSword.bto", "Ship");
 
+	
+	
+
 	//rotate model to face away from the player
 	shipMatrix *= glm::rotate(shipMatrix, 90.0f, vector3(1.0f, 0.0f, 0.0f));
 	shipMatrix *= glm::scale(vector3(2.0f,2.0f,2.0f));
@@ -33,8 +36,50 @@ void AppClass::InitVariables(void)
 
 void AppClass::Update(void)
 {
+
+	//generate walls
+	for (float i = 0; i < 15; i++)
+	{
+		matrix4 topMat = IDENTITY_M4;
+		matrix4 rightMat = IDENTITY_M4;
+		matrix4 leftMat = IDENTITY_M4;
+		matrix4 bottomMat = IDENTITY_M4;
+		
+		matrix4 topRightMat = IDENTITY_M4;
+		matrix4 bottomRightMat = IDENTITY_M4;
+		matrix4 topLeftMat = IDENTITY_M4;
+		matrix4 bottomLeftMat = IDENTITY_M4;
+		
+		topMat = glm::translate(vector3(0.0f, 5.0f, -i));
+		leftMat = glm::translate(vector3(-5.0f, 0.0f, -i));
+		bottomMat = glm::translate(vector3(0.0f, -5.0f, -i));
+		rightMat = glm::translate(vector3(5.0f, 0.0f, -i));
+		
+		topRightMat = glm::translate(vector3(5.0f, 5.0f, -i));
+		topLeftMat = glm::translate(vector3(-5.0f, 5.0f, -i));
+		bottomRightMat = glm::translate(vector3(5.0f, -5.0f, -i));
+		bottomLeftMat = glm::translate(vector3(-5.0f, -5.0f, -i));
+		
+		float color = .75 - i *.05;
+		//m_pMeshMngr->AddCubeToQueue(topMat, vector3(i*.05, i*.05, i*.05));
+		m_pMeshMngr->AddCubeToQueue(topMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(rightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(leftMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomMat, vector3(color));
+
+		m_pMeshMngr->AddCubeToQueue(topRightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomRightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(topLeftMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomLeftMat, vector3(color));
+	}
+
+	
+	
+	
 	//Update the system's time
 	m_pSystem->UpdateTime();
+	
+	AddStars();
 
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
@@ -71,13 +116,21 @@ void AppClass::Update(void)
 	//set the model matrix for the ship
 	m_pMeshMngr->SetModelMatrix(shipMatrix, "Ship");
 
+	double timeDiff = m_pSystem->LapClock();
 	//move and draw projectiles
 	if (projectiles.size() > 0)
 	{
 		for (int x = 0; x < projectiles.size(); x++)
 		{
-			projectiles[x].moveProjectile(m_pSystem->LapClock());
-			m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
+			projectiles[x].moveProjectile(timeDiff);
+			if (projectiles[x].isTargetReached() == false)
+			{
+				m_pMeshMngr->AddSphereToQueue(projectiles[x].getMatrix(), REBLUE, WIRE);
+			}
+			else
+			{
+				projectiles.erase(projectiles.begin() + x);
+			}
 		}
 	}
 
@@ -85,11 +138,21 @@ void AppClass::Update(void)
 	{
 		for (int x = 0; x < asteroids.size(); x++)
 		{
-			asteroids[x].moveAsteroid(m_pSystem->LapClock());
-			m_pMeshMngr->AddSphereToQueue(asteroids[x].getMatrix(), REGREEN, WIRE);
+			asteroids[x].moveAsteroid(timeDiff); 
+			if (asteroids[x].isTargetReached() == false)
+			{
+				m_pMeshMngr->AddSphereToQueue(asteroids[x].getMatrix(), REGREEN, SOLID);
+			}
+			else
+			{
+				asteroids.erase(asteroids.begin() + x);
+			}
 		}
 	}
-		
+	if (asteroids.size() == 0)
+	{
+		generateAsteroids();
+	}
 		//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
 }
@@ -117,7 +180,6 @@ void AppClass::Display(void)
 	}
 	
 	m_pMeshMngr->Render(); //renders the render list
-
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
@@ -131,8 +193,65 @@ void AppClass::generateAsteroids(void)
 	for (int i = 0; i < 10; i++)
 	{
 
-		vector3 pos(rand() % 8-4, rand() % 8-4, -20);
-		vector3 targetPos(rand() % 8-4, rand() % 8-4, 10);
+		vector3 pos(rand() % 8 - 4, rand() % 8 - 4, -20);
+		vector3 targetPos(rand() % 8 - 4, rand() % 8 - 4, 10);
 		asteroids.push_back(Asteroid(pos, targetPos, rand() % 10));
 	}
+}
+void AppClass::AddStars(void)
+{
+	matrix4 star1 = IDENTITY_M4;
+	matrix4 star2 = IDENTITY_M4;
+	matrix4 star3 = IDENTITY_M4;
+	matrix4 star4 = IDENTITY_M4;
+	matrix4 star5 = IDENTITY_M4;
+	matrix4 star6 = IDENTITY_M4;
+	matrix4 star7 = IDENTITY_M4;
+	matrix4 star8 = IDENTITY_M4;
+	matrix4 star9 = IDENTITY_M4;
+	matrix4 star10 = IDENTITY_M4;
+
+	star1 = glm::translate(vector3(0.0f, 0.0f, -15.0f));
+	star2 = glm::translate(vector3(0.0f, 0.0f, -15.0f));
+	star3 = glm::translate(vector3(5.0f, 2.0f, -15.0f));
+	star4 = glm::translate(vector3(5.0f, 2.0f, -15.0f));
+	star5 = glm::translate(vector3(8.0f, -4.0f, -15.0f));
+	star6 = glm::translate(vector3(8.0f, -4.0f, -15.0f));
+	star7 = glm::translate(vector3(-3.0f, 7.0f, -15.0f));
+	star8 = glm::translate(vector3(-3.0f, 7.0f, -15.0f));
+	star9 = glm::translate(vector3(-3.0f, -5.0f, -15.0f));
+	star10 = glm::translate(vector3(-3.0f, -5.0f, -15.0f));
+
+	star1 = glm::rotate(star1, 45.0f, REAXISZ);
+	star2 = glm::rotate(star1, 45.0f, REAXISZ);
+	star3 = glm::rotate(star3, 45.0f, REAXISZ);
+	star4 = glm::rotate(star3, 45.0f, REAXISZ);
+	star5 = glm::rotate(star5, 45.0f, REAXISZ);
+	star6 = glm::rotate(star5, 45.0f, REAXISZ);
+	star7 = glm::rotate(star7, 45.0f, REAXISZ);
+	star8 = glm::rotate(star7, 45.0f, REAXISZ);
+	star9 = glm::rotate(star9, 45.0f, REAXISZ);
+	star10 = glm::rotate(star9, 45.0f, REAXISZ);
+
+	star1 *= glm::scale(vector3(0.5f));
+	star2 *= glm::scale(vector3(0.5f));
+	star3 *= glm::scale(vector3(0.5f));
+	star4 *= glm::scale(vector3(0.5f));
+	star5 *= glm::scale(vector3(0.5f));
+	star6 *= glm::scale(vector3(0.5f));
+	star7 *= glm::scale(vector3(0.5f));
+	star8 *= glm::scale(vector3(0.5f));
+	star9 *= glm::scale(vector3(0.5f));
+	star10 *= glm::scale(vector3(0.5f));
+
+	m_pMeshMngr->AddCubeToQueue(star1, REWHITE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star2, REWHITE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star3, RERED, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star4, RERED, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star5, REBLUE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star6, REBLUE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star7, REYELLOW, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star8, REYELLOW, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star9, REORANGE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star10, REORANGE, SOLID);
 }

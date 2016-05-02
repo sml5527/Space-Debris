@@ -25,8 +25,12 @@ void Projectile::moveProjectile(float timeSpan)
 	//the time moved between calls should equal timeSpan * speed
 	//if position passes 1, set it to 1, and set targetReached to true
 	position += (timeSpan * speed) / travelTime;
+	
 	if (position > 1)
+	{
 		position = 1;
+		targetReached = true;
+	}
 
 	//use lerp to find the projectile's current location if position is <1
 	//otherwise the projectile's current location is equal to its target
