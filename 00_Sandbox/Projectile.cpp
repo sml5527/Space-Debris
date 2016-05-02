@@ -25,7 +25,7 @@ void Projectile::moveProjectile(float timeSpan)
 	//the time moved between calls should equal timeSpan * speed
 	//if position passes 1, set it to 1, and set targetReached to true
 	position += (timeSpan * speed) / travelTime;
-	std::cout << position;
+	
 	if (position > 1)
 	{
 		position = 1;

@@ -38,9 +38,41 @@ void AppClass::Update(void)
 {
 
 	//generate walls
-	matrix4 topMat = IDENTITY_M4;
-	topMat = glm::translate(vector3(0.0f, 5.0f, -1.0f));
-	m_pMeshMngr->AddPlaneToQueue(topMat, REWHITE);
+	for (float i = 0; i < 15; i++)
+	{
+		matrix4 topMat = IDENTITY_M4;
+		matrix4 rightMat = IDENTITY_M4;
+		matrix4 leftMat = IDENTITY_M4;
+		matrix4 bottomMat = IDENTITY_M4;
+		
+		matrix4 topRightMat = IDENTITY_M4;
+		matrix4 bottomRightMat = IDENTITY_M4;
+		matrix4 topLeftMat = IDENTITY_M4;
+		matrix4 bottomLeftMat = IDENTITY_M4;
+		
+		topMat = glm::translate(vector3(0.0f, 5.0f, -i));
+		leftMat = glm::translate(vector3(-5.0f, 0.0f, -i));
+		bottomMat = glm::translate(vector3(0.0f, -5.0f, -i));
+		rightMat = glm::translate(vector3(5.0f, 0.0f, -i));
+		
+		topRightMat = glm::translate(vector3(5.0f, 5.0f, -i));
+		topLeftMat = glm::translate(vector3(-5.0f, 5.0f, -i));
+		bottomRightMat = glm::translate(vector3(5.0f, -5.0f, -i));
+		bottomLeftMat = glm::translate(vector3(-5.0f, -5.0f, -i));
+		
+		float color = .75 - i *.05;
+		//m_pMeshMngr->AddCubeToQueue(topMat, vector3(i*.05, i*.05, i*.05));
+		m_pMeshMngr->AddCubeToQueue(topMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(rightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(leftMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomMat, vector3(color));
+
+		m_pMeshMngr->AddCubeToQueue(topRightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomRightMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(topLeftMat, vector3(color));
+		m_pMeshMngr->AddCubeToQueue(bottomLeftMat, vector3(color));
+	}
+
 	
 	
 	
