@@ -96,6 +96,7 @@ public:
 	OUTPUT: ---
 	*/
 	virtual void Release(void) final;
+	virtual void AddStars(void) final;
 };
 /*
 USAGE:
