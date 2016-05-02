@@ -7,7 +7,6 @@ void AppClass::InitWindow(String a_sWindowName)
 	//if this line is in Init Application it will depend on the .cfg file, if it
 	//is on the InitVariables it will always force it regardless of the .cfg
 	m_v4ClearColor = vector4(0.0f, 0.0f, 0.0f, 0.0f);
-
 	//hide cursor
 	ShowCursor(FALSE);
 }
@@ -34,6 +33,8 @@ void AppClass::Update(void)
 {
 	//Update the system's time
 	m_pSystem->UpdateTime();
+	
+	AddStars();
 
 	//Update the mesh manager's time without updating for collision detection
 	m_pMeshMngr->Update();
@@ -107,11 +108,68 @@ void AppClass::Display(void)
 	}
 	
 	m_pMeshMngr->Render(); //renders the render list
-
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
 void AppClass::Release(void)
 {
 	super::Release(); //release the memory of the inherited fields
+}
+
+void AppClass::AddStars(void)
+{
+	matrix4 star1 = IDENTITY_M4;
+	matrix4 star2 = IDENTITY_M4;
+	matrix4 star3 = IDENTITY_M4;
+	matrix4 star4 = IDENTITY_M4;
+	matrix4 star5 = IDENTITY_M4;
+	matrix4 star6 = IDENTITY_M4;
+	matrix4 star7 = IDENTITY_M4;
+	matrix4 star8 = IDENTITY_M4;
+	matrix4 star9 = IDENTITY_M4;
+	matrix4 star10 = IDENTITY_M4;
+
+	star1 = glm::translate(vector3(0.0f, 0.0f, -5.0f));
+	star2 = glm::translate(vector3(0.0f, 0.0f, -5.0f));
+	star3 = glm::translate(vector3(5.0f, 2.0f, -5.0f));
+	star4 = glm::translate(vector3(5.0f, 2.0f, -5.0f));
+	star5 = glm::translate(vector3(8.0f, -4.0f, -5.0f));
+	star6 = glm::translate(vector3(8.0f, -4.0f, -5.0f));
+	star7 = glm::translate(vector3(-3.0f, 7.0f, -5.0f));
+	star8 = glm::translate(vector3(-3.0f, 7.0f, -5.0f));
+	star9 = glm::translate(vector3(-3.0f, -5.0f, -5.0f));
+	star10 = glm::translate(vector3(-3.0f, -5.0f, -5.0f));
+
+	star1 = glm::rotate(star1, 45.0f, REAXISZ);
+	star2 = glm::rotate(star1, 45.0f, REAXISZ);
+	star3 = glm::rotate(star3, 45.0f, REAXISZ);
+	star4 = glm::rotate(star3, 45.0f, REAXISZ);
+	star5 = glm::rotate(star5, 45.0f, REAXISZ);
+	star6 = glm::rotate(star5, 45.0f, REAXISZ);
+	star7 = glm::rotate(star7, 45.0f, REAXISZ);
+	star8 = glm::rotate(star7, 45.0f, REAXISZ);
+	star9 = glm::rotate(star9, 45.0f, REAXISZ);
+	star10 = glm::rotate(star9, 45.0f, REAXISZ);
+
+	star1 *= glm::scale(vector3(0.5f));
+	star2 *= glm::scale(vector3(0.5f));
+	star3 *= glm::scale(vector3(0.5f));
+	star4 *= glm::scale(vector3(0.5f));
+	star5 *= glm::scale(vector3(0.5f));
+	star6 *= glm::scale(vector3(0.5f));
+	star7 *= glm::scale(vector3(0.5f));
+	star8 *= glm::scale(vector3(0.5f));
+	star9 *= glm::scale(vector3(0.5f));
+	star10 *= glm::scale(vector3(0.5f));
+
+	m_pMeshMngr->AddCubeToQueue(star1, REWHITE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star2, REWHITE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star3, RERED, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star4, RERED, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star5, REBLUE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star6, REBLUE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star7, REYELLOW, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star8, REYELLOW, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star9, REORANGE, SOLID);
+	m_pMeshMngr->AddCubeToQueue(star10, REORANGE, SOLID);
 }
