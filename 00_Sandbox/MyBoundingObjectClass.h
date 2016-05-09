@@ -15,6 +15,13 @@ class MyBoundingObjectClass
 	vector3 m_v3Center = vector3(0.0f); //Will store the center point of the Object Class
 	vector3 m_v3Min = vector3(0.0f); //Will store the minimum vector of the Object Class
 	vector3 m_v3Max = vector3(0.0f); //Will store the maximum vector of the Object Class
+	vector3 m_v3CenterG = vector3(0.0f); //Will store the center point of the Object Class
+	vector3 m_v3MinG = vector3(0.0f); //Will store the minimum vector of the Object Class
+	vector3 m_v3MaxG = vector3(0.0f); //Will store the maximum vector of the Object Class
+
+	vector3 m_v3HalfWidth = vector3(0.0f);//Will store half the size of all sides
+	vector3 m_v3HalfWidthG = vector3(0.0f);//Will store half the size of all sides
+
 	
 	vector3 color = vector3(0.0f, 1.0f, 0.0f);
 	MeshManagerSingleton* m_pMeshMngr = MeshManagerSingleton::GetInstance();
@@ -92,6 +99,23 @@ public:
 	OUTPUT: bool -> check of the collision
 	*/
 	bool IsColliding(MyBoundingObjectClass* const a_pOther);
+	/*
+	USAGE: Gets the Bounding Object sizes for all sides (divided in half)
+	ARGUMENTS: ---
+	OUTPUT: HalfWidth Vector
+	*/
+	vector3 GetHalfWidth(void);
+	/*
+	USAGE: Gets the Bounding Object sizes for all sides (divided in half) reoriented
+	ARGUMENTS: ---
+	OUTPUT: HalfWidth Vector
+	*/
+	vector3 GetHalfWidthG(void);
+	/*
+	USAGE: Gets the min vector from the Oriented Bounding Box in local space
+	ARGUMENTS: ---
+	OUTPUT: Minimum in global space
+	*/
 
 	vector3 GetSize(void);
 	matrix4 GetModelMatrix(void);

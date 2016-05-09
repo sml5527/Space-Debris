@@ -9,6 +9,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "E12_BoundingSphereClass", "
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A11_SAT", "A11_SAT\A11_SAT.vcxproj", "{1F399E1A-9AA5-482B-863C-C921F8BC8F5A}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OctreeStart", "OctreeStart\OctreeStart.vcxproj", "{C39927BA-EB62-467C-96FA-6DE4B323CE92}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -37,6 +39,12 @@ Global
 		{1F399E1A-9AA5-482B-863C-C921F8BC8F5A}.Release|x64.ActiveCfg = Release|Win32
 		{1F399E1A-9AA5-482B-863C-C921F8BC8F5A}.Release|x86.ActiveCfg = Release|Win32
 		{1F399E1A-9AA5-482B-863C-C921F8BC8F5A}.Release|x86.Build.0 = Release|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Debug|x64.ActiveCfg = Debug|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Debug|x86.ActiveCfg = Debug|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Debug|x86.Build.0 = Debug|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Release|x64.ActiveCfg = Release|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Release|x86.ActiveCfg = Release|Win32
+		{C39927BA-EB62-467C-96FA-6DE4B323CE92}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
