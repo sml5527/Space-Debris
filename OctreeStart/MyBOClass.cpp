@@ -192,17 +192,17 @@ vector3 MyBOClass::GetMaxG(void) { return m_v3MaxG; }
 //--- Non Standard Singleton Methods
 void MyBOClass::DisplaySphere(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddSphereToQueue(glm::translate(m_m4ToWorld, m_v3Center) *
+	m_pMeshMngr->AddSphereToRenderList(glm::translate(m_m4ToWorld, m_v3Center) *
 		glm::scale(vector3(m_fRadius * 2.0f)), a_v3Color, WIRE);
 }
 void MyBOClass::DisplayOriented(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddCubeToQueue(glm::translate(m_m4ToWorld, m_v3Center) *
+	m_pMeshMngr->AddCubeToRenderList(glm::translate(m_m4ToWorld, m_v3Center) *
 		glm::scale(m_v3HalfWidth * 2.0f), a_v3Color, WIRE);
 }
 void MyBOClass::DisplayReAlligned(vector3 a_v3Color)
 {
-	m_pMeshMngr->AddCubeToQueue(glm::translate(IDENTITY_M4, m_v3CenterG) *
+	m_pMeshMngr->AddCubeToRenderList(glm::translate(IDENTITY_M4, m_v3CenterG) *
 		glm::scale(m_v3HalfWidthG * 2.0f), a_v3Color, WIRE);
 }
 bool MyBOClass::SAT(MyBOClass* const a_pOther)

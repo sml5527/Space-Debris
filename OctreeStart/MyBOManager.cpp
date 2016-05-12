@@ -1,7 +1,6 @@
 #include "MyBOManager.h"
 //  MyBOManager
 MyBOManager* MyBOManager::m_pInstance = nullptr;
-
 void MyBOManager::Init(void)
 {
 	m_pMeshMngr = MeshManagerSingleton::GetInstance();
@@ -74,18 +73,18 @@ void MyBOManager::AddObject(std::vector<vector3> a_lVertex, String a_sName)
 	std::vector<int> lVector;
 	m_llCollidingIndices.push_back(lVector);
 }
-void MyBOManager::AddOctant(std::vector<vector3> a_lVertex, String a_sName)
-{
-	MyBOClass* pObject = new MyBOClass(a_lVertex);
-	if (pObject != nullptr)
+	void MyBOManager::AddOctant(std::vector<vector3> a_lVertex, String a_sName)
 	{
-		m_lOctant.push_back(pObject);//Add the Object
-		m_mapIndex[a_sName] = m_nObjectCount; //Add entry to the dictionary
+		MyBOClass* pObject = new MyBOClass(a_lVertex);
+		if (pObject != nullptr)
+		{
+			m_lOctant.push_back(pObject);//Add the Object
+			m_mapIndex[a_sName] = m_nObjectCount; //Add entry to the dictionary
+		}
+		m_nObjectCount = m_lObject.size();
+		std::vector<int> lVector;
+		m_llCollidingIndices.push_back(lVector);
 	}
-	m_nObjectCount = m_lObject.size();
-	std::vector<int> lVector;
-	m_llCollidingIndices.push_back(lVector);
-}
 void MyBOManager::SetModelMatrix(matrix4 a_mModelMatrix, String a_sIndex)
 {
 	//find the object
@@ -232,6 +231,21 @@ void MyBOManager::CheckCollisions(void)
 				m_llCollidingIndices[nObjectB].push_back(nObjectA);
 				m_lObject[nObjectA]->DisplaySphere();
 				m_lObject[nObjectB]->DisplaySphere();
+			}
+		}
+	}
+}
+//Checks the collisons of the octants vs the objects and attempts to add the collison to the object to a list of colliding objects into the octant.
+void MyBOManager::checkOctantCollisions()
+{
+
+	for (uint nObjectA = 0; nObjectA < m_nObjectCount - 1; nObjectA++)
+	{
+		for (uint nObjectB = nObjectA + 1; nObjectB < m_nObjectCount; nObjectB++)
+		{
+			if (m_lObject[nObjectA]->IsColliding(m_lOctant[nObjectB]))
+			{
+				//m_lOctant[nObjectB]->collisionList.push_back(m_lObject[nObjectA]);
 			}
 		}
 	}

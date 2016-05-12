@@ -6,7 +6,6 @@ Date: 2015/11
 #define __MYBOMANAGER_H_
 
 #include "MyBOClass.h"
-#include "MyOctant.h"
 
 //System Class
 class MyBOManager
@@ -203,6 +202,8 @@ private:
 	OUTPUT: ---
 	*/
 	void CheckCollisions(void);
+
+	void checkOctantCollisions();
 };
 
 #endif //__MYBOMANAGER_H_

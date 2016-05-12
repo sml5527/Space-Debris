@@ -48,6 +48,7 @@ void MyOctant::Init(void)
 		if (m_fSize < fSizeZ)
 			m_fSize = fSizeZ;
 	}
+	MakeBO();
 }
 void MyOctant::Swap(MyOctant& other)
 {
@@ -137,6 +138,8 @@ void MyOctant::Subdivide(void)
 	m_pChildren[7].m_v3Position.x += fNewSize;
 	m_pChildren[7].m_v3Position.y -= fNewSize;
 	m_pChildren[7].m_v3Position.z -= fNewSize;
+
+	
 }
 void MyOctant::ReleaseChildren(void)
 {
@@ -146,6 +149,45 @@ void MyOctant::ReleaseChildren(void)
 		m_pChildren = nullptr;
 	}
 }
+//Makes a bounding object for the BOManager to check collisons against.
+void MyOctant::MakeBO(void)
+{
+	std::vector<vector3> points;
+
+	vector3 rightTopFront = m_v3Position + vector3(m_fSize / 2, m_fSize / 2, m_fSize / 2);
+	points.push_back(rightTopFront);
+
+	vector3 leftTopFront = m_v3Position + vector3(-(m_fSize / 2), m_fSize / 2, m_fSize / 2);
+	points.push_back(leftTopFront);
+
+	vector3 leftBotFront = m_v3Position + vector3(-(m_fSize / 2), -(m_fSize) / 2, m_fSize / 2);
+	points.push_back(leftBotFront);
+
+	vector3 rightBotFront = m_v3Position + vector3(m_fSize / 2, -(m_fSize / 2), m_fSize / 2);
+	points.push_back(rightBotFront);
+
+	vector3 rightTopBack = m_v3Position + vector3(m_fSize / 2, m_fSize / 2, -(m_fSize / 2));
+	points.push_back(rightTopBack);
+
+	vector3 leftTopBack = m_v3Position + vector3(-(m_fSize / 2), m_fSize / 2, -(m_fSize / 2));
+	points.push_back(leftTopBack);
+
+	vector3 leftBotpBack = m_v3Position + vector3(-(m_fSize / 2), -(m_fSize / 2), -(m_fSize / 2));
+	points.push_back(leftBotpBack);
+
+	vector3 rightBotBack = m_v3Position + vector3(m_fSize / 2, -(m_fSize / 2), -(m_fSize / 2));
+	points.push_back(rightBotBack);
+
+	m_pBOMngr->AddOctant(points, "Octant");
+}
+//Returns a list of collisions with this octant
+std::vector<MyBOClass> MyOctant::getCL()
+{
+
+	return collisionList;
+}
+
+
 //Accessors
 
 //--- Non Standard Singleton Methods

@@ -23,7 +23,7 @@ void AppClass::InitVariables(void)
 		REAXISY);//What is up
 	//Load a model onto the Mesh manager
 	m_pBOMngr = MyBOManager::GetInstance();
-	for (uint n = 0; n < 200; n++)
+	for (uint n = 0; n < 100; n++)
 	{
 		String sName = "Creeper" + std::to_string(n);
 		vector3 v3Position = glm::sphericalRand(10.0f);
@@ -33,11 +33,13 @@ void AppClass::InitVariables(void)
 	}
 
 	m_pOctreeHead = new MyOctant();
+	//m_pBOMngr->checkOctantCollisions();
 	m_pOctreeHead->Subdivide();
 	for (int i = 0; i < 8; i++)
 	{
 		m_pOctreeHead->m_pChildren[i].Subdivide();
 	}
+	
 	for (int j = 0; j < 8; j++)
 	{
 		for (int i = 0; i < 8; i++)
@@ -45,6 +47,9 @@ void AppClass::InitVariables(void)
 			m_pOctreeHead->m_pChildren[i].m_pChildren[j].Subdivide();
 		}
 	}
+
+	//m_pOctreeHead->m_pChildren[0].Subdivide();
+
 	//MyOctant octant = m_pOctreeHead->m_pChildren[0];
 	//for (uint i = 0; i < 1000; i++)
 	//{
@@ -75,12 +80,14 @@ void AppClass::Update(void)
 	//m_pMeshMngr->AddSkyboxToRenderList("Skybox_01.png");
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
 
+	if(showOc)
 	m_pOctreeHead->Display();
+
 
 	//BRUTE FORCE
 	if (spacialOptimizationOn)
 	{
-
+	
 	}
 	else
 	{
@@ -106,9 +113,9 @@ void AppClass::Display(void)
 	//clear the screen
 	ClearScreen();
 	//Render the grid based on the camera's mode:
-//	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
+	m_pMeshMngr->AddGridToRenderListBasedOnCamera(m_pCameraMngr->GetCameraMode());
 	m_pMeshMngr->Render(); //renders the render list
-//	m_pMeshMngr->ResetRenderList(); //Reset the Render list after render
+	m_pMeshMngr->ResetRenderList(); //Reset the Render list after render
 	m_pGLSystem->GLSwapBuffers(); //Swaps the OpenGL buffers
 }
 
@@ -121,7 +128,6 @@ void AppClass::Release(void)
 	}
 	super::Release(); //release the memory of the inherited fields
 }
-
 void AppClass::toggleOptimization()
 {
 	spacialOptimizationOn = !spacialOptimizationOn;

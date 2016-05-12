@@ -92,7 +92,6 @@ public:
 	OUTPUT: ---
 	*/
 	virtual void Release(void) final;
-
 	virtual void toggleOptimization();
 	virtual void toggleOctree();
 };

@@ -7,6 +7,7 @@ Date: 2015/06
 
 #include "RE\ReEng.h"
 #include "MyBOManager.h"
+#include "MyBOClass.h"
 
 //System Class
 class MyOctant
@@ -16,10 +17,9 @@ class MyOctant
 	float m_fSize = 0.0f;
 	MeshManagerSingleton* m_pMeshMngr = nullptr;
 	MyBOManager* m_pBOMngr = nullptr;
-
-	
 	
 public:
+	std::vector<MyBOClass> collisionList;
 	static bool m_bHead;
 	MyOctant* m_pChildren = nullptr;
 	/*
@@ -66,6 +66,10 @@ public:
 	void Subdivide(void);
 	void ReleaseChildren(void);
 
+	void MakeBO(void);
+
+
+	std::vector<MyBOClass> getCL();
 private:
 	/*
 	Method: Release
