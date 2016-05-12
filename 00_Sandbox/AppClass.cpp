@@ -154,6 +154,35 @@ void AppClass::Update(void)
 	{
 		generateAsteroids();
 	}
+
+	//check collisions between projectiles and asteroids
+	for (int x = 0; x < projectiles.size(); x++)
+	{
+		for (int y = 0; y < asteroids.size(); y++)
+		{
+			float dist = glm::distance(projectiles[x].getCurrentLocation(), asteroids[y].getCurrentLocation());
+			if (dist < 2)
+			{
+				//masss
+				float pMass = projectiles[x].getMass();
+				float aMass = asteroids[y].getMass();
+
+				//velocity
+				vector3 pVel = projectiles[x].getVelocity();
+				vector3 aVel = asteroids[y].getVelocity();
+
+				//new velocity
+				vector3 pFinal = (pVel * (pMass - aMass) + 2 * aMass * aVel) / (pMass + aMass);
+				vector3 aFinal = (aVel * (aMass - pMass) + 2 * pMass * pVel) / (pMass + aMass);
+
+				//update
+				projectiles[x].changeVelocity(pFinal, projectiles[x].getCurrentLocation());
+				asteroids[y].changeVelocity(aFinal, asteroids[y].getCurrentLocation());
+			}
+		}
+	}
+
+
 		//Adds all loaded instance to the render list
 	m_pMeshMngr->AddInstanceToRenderList("ALL");
 }

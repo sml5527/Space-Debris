@@ -8,6 +8,7 @@ Projectile::Projectile(vector3 pos, vector3 trg, float spd, float massIn)
 	target = trg;
 	speed = spd;
 	mass = massIn;
+	currentLocation = origin;
 
 	//find travelTime
 	travelTime = glm::distance(origin, target);
@@ -45,6 +46,8 @@ void Projectile::moveProjectile(float timeSpan)
 		travelVector = target;
 	}
 
+	currentLocation = travelVector;
+
 	//translate the projectile matrix by its travelVector
 	projMatrix = glm::translate(travelVector);
 }
@@ -59,4 +62,30 @@ matrix4 Projectile::getMatrix()
 bool Projectile::isTargetReached()
 {
 	return targetReached;
+}
+
+vector3 Projectile::getVelocity()
+{
+	vector3 velocity = target - origin;
+	velocity = glm::normalize(velocity);
+	return velocity * speed;
+
+}
+
+vector3 Projectile::getCurrentLocation()
+{
+	return currentLocation;
+}
+
+float Projectile::getMass()
+{
+	return mass;
+}
+
+void Projectile::changeVelocity(vector3 newVelocity, vector3 newOrigin)
+{
+	position = 0;
+	origin = newOrigin;
+	target = origin + glm::normalize(newVelocity) * 10.0f;
+	speed = 10;
 }

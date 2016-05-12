@@ -17,6 +17,7 @@ private:
 	matrix4 projMatrix = IDENTITY_M4; //model matrix for the projectile
 	bool targetReached = false; //if the projectile has reached its target yet
 	float mass; // used for phys calculations
+	vector3 currentLocation; 
 
 public:
 	//constructor; takes starting position, target position, and projectile speed
@@ -28,6 +29,11 @@ public:
 	//get functions
 	matrix4 getMatrix();
 	bool isTargetReached();
+	vector3 getVelocity();
+	vector3 getCurrentLocation();
+	float getMass();
+
+	void changeVelocity(vector3 newVelocity, vector3 newOrigin);
 };
 
 #endif // !_PROJECTILE_H_
