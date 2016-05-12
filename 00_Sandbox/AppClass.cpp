@@ -118,7 +118,7 @@ void AppClass::Update(void)
 	m_pMeshMngr->SetModelMatrix(shipMatrix, "Ship");
 
 	double timeDiff = m_pSystem->LapClock();
-	//move and draw projectiles
+	//move and draw projectiles, check collision
 	if (projectiles.size() > 0)
 	{
 		for (int x = 0; x < projectiles.size(); x++)
