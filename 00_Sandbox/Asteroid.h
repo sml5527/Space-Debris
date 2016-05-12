@@ -14,7 +14,7 @@ private:
 public:
 	typedef Projectile super;
 	//constructor; takes starting position, target position, and projectile speed
-	Asteroid(vector3 pos, vector3 trg, float spd);
+	Asteroid(vector3 pos, vector3 trg, float spd, float mass);
 
 	//move the projectile towards its target
 	void moveAsteroid(float timeSpan);

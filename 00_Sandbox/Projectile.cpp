@@ -1,12 +1,13 @@
 #include "Projectile.h"
 //constructor
-Projectile::Projectile(vector3 pos, vector3 trg, float spd)
+Projectile::Projectile(vector3 pos, vector3 trg, float spd, float massIn)
 {
 	//initialize variables with given values
 	origin = pos;
 	position = 0;
 	target = trg;
 	speed = spd;
+	mass = massIn;
 
 	//find travelTime
 	travelTime = glm::distance(origin, target);

@@ -1,6 +1,6 @@
 #include "Asteroid.h"
 //constructor
-Asteroid::Asteroid(vector3 pos, vector3 trg, float spd) : Projectile(pos, trg, spd)
+Asteroid::Asteroid(vector3 pos, vector3 trg, float spd, float massIn) : Projectile(pos, trg, spd, massIn)
 {
 }
 

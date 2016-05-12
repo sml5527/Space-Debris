@@ -1,6 +1,7 @@
 #include "MyBOManager.h"
 //  MyBOManager
 MyBOManager* MyBOManager::m_pInstance = nullptr;
+
 void MyBOManager::Init(void)
 {
 	m_pMeshMngr = MeshManagerSingleton::GetInstance();
@@ -67,6 +68,18 @@ void MyBOManager::AddObject(std::vector<vector3> a_lVertex, String a_sName)
 	if (pObject != nullptr)
 	{
 		m_lObject.push_back(pObject);//Add the Object
+		m_mapIndex[a_sName] = m_nObjectCount; //Add entry to the dictionary
+	}
+	m_nObjectCount = m_lObject.size();
+	std::vector<int> lVector;
+	m_llCollidingIndices.push_back(lVector);
+}
+void MyBOManager::AddOctant(std::vector<vector3> a_lVertex, String a_sName)
+{
+	MyBOClass* pObject = new MyBOClass(a_lVertex);
+	if (pObject != nullptr)
+	{
+		m_lOctant.push_back(pObject);//Add the Object
 		m_mapIndex[a_sName] = m_nObjectCount; //Add entry to the dictionary
 	}
 	m_nObjectCount = m_lObject.size();

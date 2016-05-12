@@ -16,10 +16,11 @@ private:
 	float travelTime; //how long it should take the projectile to move the distance between its origin and its target
 	matrix4 projMatrix = IDENTITY_M4; //model matrix for the projectile
 	bool targetReached = false; //if the projectile has reached its target yet
+	float mass; // used for phys calculations
 
 public:
 	//constructor; takes starting position, target position, and projectile speed
-	Projectile(vector3 pos, vector3 trg, float spd);
+	Projectile(vector3 pos, vector3 trg, float spd, float massIn);
 
 	//move the projectile towards its target
 	void moveProjectile(float timeSpan);

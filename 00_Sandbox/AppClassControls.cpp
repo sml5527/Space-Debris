@@ -75,7 +75,7 @@ void AppClass::ProcessMouse(void)
 		//create projectile
 		vector3 shipPos = vector3(shipMatrix[3][0], shipMatrix[3][1], shipMatrix[3][2]);
 		vector3 targetPos = vector3(mouseX, mouseY, -10.0f);
-		projectiles.push_back(Projectile(shipPos, targetPos, 2.0f));
+		projectiles.push_back(Projectile(shipPos, targetPos, 2.0f, 1.0f));
 	}
 	
 	if(sf::Mouse::isButtonPressed(sf::Mouse::Button::Middle))

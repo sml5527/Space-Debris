@@ -6,6 +6,7 @@ Date: 2015/11
 #define __MYBOMANAGER_H_
 
 #include "MyBOClass.h"
+#include "MyOctant.h"
 
 //System Class
 class MyBOManager
@@ -13,6 +14,7 @@ class MyBOManager
 	uint m_nObjectCount = 0; //number of AABB in the list
 	static MyBOManager* m_pInstance; // Singleton pointer
 	std::vector<MyBOClass*> m_lObject; //list of AABB
+	std::vector<MyBOClass*> m_lOctant; //list of Octants
 	MeshManagerSingleton* m_pMeshMngr = nullptr;//Mesh Manager Singleton
 	std::vector<std::vector<int>> m_llCollidingIndices; //List of list of colliding indices.
 	std::map<String, uint> m_mapIndex;//Map relating the mesh and the index
@@ -39,6 +41,7 @@ public:
 	OUTPUT: ---
 	*/
 	void AddObject(std::vector<vector3> a_lVertex, String a_sName);
+	void AddOctant(std::vector<vector3> a_lVertex, String a_sName);
 	/*
 	USAGE: Creates a Object from a list of vertices and adds it to the object list from a previously
 	loaded object to the mesh manager.

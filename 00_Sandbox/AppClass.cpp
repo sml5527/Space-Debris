@@ -195,10 +195,10 @@ void AppClass::generateAsteroids(void)
 	for (int i = 0; i < 10; i++)
 	{
 		String sName = "Asteroid" + std::to_string(i);
-		m_pBOMngr->addObject(sName);
+		//m_pBOMngr->addObject(sName);
 		vector3 pos(rand() % 8 - 4, rand() % 8 - 4, -20);
 		vector3 targetPos(rand() % 8 - 4, rand() % 8 - 4, 10);
-		asteroids.push_back(Asteroid(pos, targetPos, rand() % 10));
+		asteroids.push_back(Asteroid(pos, targetPos, rand() % 10, 2.0f));
 	}
 }
 void AppClass::AddStars(void)
